@@ -34,6 +34,8 @@ params.constrain_rho = false;
 %%
 n_vals = [5,10,15];
 experiment_dir = 'experiments/posterior_concentration';
+if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir),end
+
 N = 10;
 M = 30000;
 

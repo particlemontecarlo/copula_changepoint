@@ -37,6 +37,8 @@ params.n_quadrature_points = n_quadrature_points;
 %%
 n_vals = [10];
 experiment_dir = 'experiments/compare_switching';
+if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir),end
+
 N = 10;
 M = 1e5;
 
