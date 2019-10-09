@@ -21,6 +21,7 @@ tau0 = cumsum(K);
 [~,T] = size(zTrue);
 n_quadrature_points = 1e2;
 z = zTrue;
+constrain_rho = false;
 
 % save data to struct
 params.X = X;
@@ -28,12 +29,10 @@ params.z = z;
 params.GDPPrior = GDPPrior;
 params.pGeo = pGeo;
 params.n_quadrature_points = n_quadrature_points;
-
+params.constrain_rho = constrain_rho;
 
 
 %%
-n_vals = [5,10,15];
-experiment_dir = 'experiments/posterior_concentration';
 N = 10;
 M = 1e3;
 
@@ -57,7 +56,7 @@ for m=1:M
     disp(m)
 
     % update all params
-    [tau,params,corr_mat] = particleGibbs(N,tau,params,GDPPrior);
+    [tau,params,corr_mat] = particleGibbs(N,tau,params);
 
     % save results
     %like_ests(m) = like_est;
