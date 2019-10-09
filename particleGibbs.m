@@ -1,4 +1,4 @@
-function [tau,params,corr_mat] = particleGibbs(N,tau_star,params)
+function [tau,params,corr_mat,joint_loglik,rho_record] = particleGibbs(N,tau_star,params)
 %PARTICLEGIBBS Performs particle Gibbs for changepoint locations and
 %generic Gibbs updates for the other parameters. Optionally add 
 %(...,'ConstrainRho',true) to the input arguments so that inference is
@@ -26,6 +26,7 @@ constrain_rho   = params.constrain_rho;
 K = length(tau);
 rhos = zeros(n,K);
 t_vals = zeros(1,T);
+rho_record = zeros(1,T);
 for k=1:K
     % get the segment ends
     tstart = tau(k)+1;
@@ -64,7 +65,7 @@ for k=1:K
         muZpostt =  sum(rhoj.*X(:,t)./(1-rhoj.^2));
         z_samp = normrnd(muZpostt*varZpost,varZpost^0.5,1);
         z(t) = s*z_samp;
-
+        rho_record(t) = rhoj(2);
         if t==1
             corr_mat = rhoj*rhoj';
         end
@@ -80,6 +81,9 @@ params.z = z;
 % update changepoint parameters conditional on changepoints
 n_success = length(tau)-1;
 params.pGeo = betarnd(a_prior + n_success,b_prior + T - n_success);
+
+% log likelihood after marginalising out lambdas
+joint_loglik = like_est + -0.5*(T*log(2*pi) + sum(z.^2)) - betalike([length(tau),1+T],params.pGeo);
 
 
 end

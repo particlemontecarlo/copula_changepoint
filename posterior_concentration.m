@@ -2,7 +2,7 @@
 % the following aims to sample from the posterior distribution over
 % changepoint locations.
 clear
-rng(2)
+rng(1)
 addpath(genpath('util'))
 addpath(genpath('csmc_cp'));
 addpath(genpath('smc_cp'));
@@ -10,10 +10,10 @@ addpath(genpath('fearnhead_cp'));
 
 % generate data
 n = 15;
-J = 2;
-pGeo = 0.02;
+J = 5;
+pGeo = 0.05;
 segment_same_length = true;
-GDPPrior = true;
+GDPPrior = false;
 [ X,K,rhosTrue,zTrue ] = generateCopulaData( n,J,pGeo,segment_same_length,GDPPrior );
 corr_mat_true = rhosTrue(:,1)*rhosTrue(:,1)';
 
@@ -51,18 +51,19 @@ for ss=1:length(n_vals)
     n = n_vals(ss);
     params.X = X(1:n,:);
 
-    tau_collect = [tau];
+    tau_collect = [];
     like_ests = zeros(1,M);
     pGeo_collect = zeros(1,M);
     corr_mat_collect =  zeros(n,n,M);
     z_collect = zeros(M,T);
+    rho_record_collect = zeros(M,T);
 
     tic;
     for m=1:M
         disp(m)
 
         % update all params
-        [tau,params,corr_mat] = particleGibbs(N,tau,params);
+        [tau,params,corr_mat,joint_loglik,rho_record] = particleGibbs(N,tau,params);
 
         % save results
         %like_ests(m) = like_est;
@@ -70,6 +71,7 @@ for ss=1:length(n_vals)
         pGeo_collect(m) = params.pGeo;
         z_collect(m,:) = params.z;
         corr_mat_collect(:,:,m) = corr_mat;
+        rho_record_collect(m,:) = rho_record;
     end
     time_taken = toc;
     
