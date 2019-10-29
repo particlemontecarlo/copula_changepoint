@@ -13,9 +13,7 @@ n_quadrature_points = 1e2;
 constrain_rho = false;
 
 experiment_dir = 'experiments/futures_pmcmc';
-if ~exist(experiment_dir, 'dir')
-  mkdir(experiment_dir);
-end
+if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir); end
 
 N = 10;
 M = 2e4;
