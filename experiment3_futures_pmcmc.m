@@ -22,6 +22,7 @@ distribution_names = {'ghyp','sstd'};
 GDPPrior_arr = [false,true];
 
 
+
 %% perform experiment on each of the data sources
 
 for dist_indx=1:2
