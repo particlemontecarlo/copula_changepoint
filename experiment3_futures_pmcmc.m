@@ -2,7 +2,7 @@
 % the following aims to sample from the posterior distribution over
 % changepoint locations.
 clear
-rng(1)
+rng(2)
 addpath(genpath('util'))
 addpath(genpath('csmc_cp'));
 addpath(genpath('smc_cp'));
@@ -16,7 +16,7 @@ experiment_dir = 'experiments/futures_pmcmc';
 if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir); end
 
 N = 10;
-M = 2e4;
+M = 1e4;
 
 distribution_names = {'ghyp','sstd'};            
 GDPPrior_arr = [false,true];
