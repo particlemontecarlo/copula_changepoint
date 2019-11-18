@@ -12,11 +12,11 @@ addpath(genpath('fearnhead_cp'));
 n_quadrature_points = 1e2;
 constrain_rho = false;
 
-experiment_dir = 'experiments/futures_pmcmc';
+experiment_dir = 'experiments/futures_reduced_complexity';
 if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir); end
 
-N = 10;
-M = 1e5;
+N = 50;
+M = 1e4;
 
 distribution_names = {'ghyp','sstd'};            
 
@@ -39,8 +39,9 @@ parfor exp_indx=1:4
     X_mat = X_mat.X_mat;
     X = X_mat';
     [n,T] = size(X);
+    X = X(:,(T/2):end);
+    [n,T] = size(X);
     
-
     z0 = randn(1,T);
     pGeo0 = 0.5;
     tau = [0];
