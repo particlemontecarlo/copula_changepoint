@@ -9,30 +9,34 @@ addpath(genpath('smc_cp'));
 addpath(genpath('fearnhead_cp'));
 
 % generate data
-n = 5;
-J = 2;
-pGeo = 0.02;
+n = 20;
+J = 5;
+pGeo = 0.05;
 segment_same_length = true;
 GDPPrior = true;
-[ X,K,rhosTrue,zTrue ] = generateCopulaData( n,J,pGeo,segment_same_length,GDPPrior );
+fraction_change = 0.2;
+[ X,K,rhosTrue,zTrue ] = generateCopulaDataLowDimCP( n,J,pGeo,...
+    segment_same_length,GDPPrior,...
+    fraction_change);
 corr_mat_true = rhosTrue(:,1)*rhosTrue(:,1)';
 
 tau0 = cumsum(K);
 [~,T] = size(zTrue);
 n_quadrature_points = 1e2;
 z = zTrue;
+pGeo0 = 0.5;
 
 % save data to struct
 params.X = X;
 params.z = randn(1,T);
 params.GDPPrior = GDPPrior;
-params.pGeo = pGeo;
+params.pGeo = pGeo0;
 params.n_quadrature_points = n_quadrature_points;
 params.constrain_rho = false;
 
 
 %%
-experiment_dir = 'experiments/large_autocorr';
+experiment_dir = 'experiments/lowD_changepoints';
 if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir),end
 
 N = 10;
@@ -45,7 +49,6 @@ tau = [0];
 
 params.a_prior = a_prior;
 params.b_prior = b_prior;
-
 
 tau_collect = [];
 like_ests = zeros(1,M);
@@ -71,7 +74,9 @@ for m=1:M
 end
 time_taken = toc;
 
-save(sprintf('%s/large_autocorr_n%i',experiment_dir,n))
+save(sprintf('%s/lowD_changepoints_n%i_N%i',experiment_dir,n,N))
+
+
 
 
 
