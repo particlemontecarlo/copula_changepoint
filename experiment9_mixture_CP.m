@@ -9,16 +9,32 @@ addpath(genpath('smc_cp'));
 addpath(genpath('fearnhead_cp'));
 
 % generate data
-n = 20;
-J = 2;
-pGeo = 0.05;
+n = 10;
+J = 3;
+pGeo = 1/20;
 segment_same_length = true;
 GDPPrior = false;
 fraction_change = 1;
-[ X,K,rhosTrue,zTrue ] = generateCopulaDataLowDimCP( n,J,pGeo,...
+[ X1,K,rhosTrue,zTrue ] = generateCopulaDataLowDimCP( n,J,pGeo,...
     segment_same_length,GDPPrior,...
     fraction_change);
-corr_mat_true = rhosTrue(:,1)*rhosTrue(:,1)';
+J = 2;
+pGeo = 1/30;
+[ X2,K,rhosTrue,zTrue ] = generateCopulaDataLowDimCP( n,J,pGeo,...
+    segment_same_length,GDPPrior,...
+    fraction_change);
+
+[n,T] = size(X1);
+
+X = zeros(n,T);
+w = 0.5;
+for t=1:T
+    if rand(1)<w
+        X(:,t)= X1(:,t);
+    else
+        X(:,t) = X2(:,t);
+    end
+end
 
 tau0 = cumsum(K);
 [~,T] = size(zTrue);
