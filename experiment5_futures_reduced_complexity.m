@@ -15,8 +15,8 @@ constrain_rho = false;
 experiment_dir = 'experiments/futures_reduced_complexity';
 if ~exist(experiment_dir, 'dir'),mkdir(experiment_dir); end
 
-N = 50;
-M = 1e4;
+N = 10;
+M = 1e5;
 
 distribution_names = {'ghyp','sstd'};            
 
